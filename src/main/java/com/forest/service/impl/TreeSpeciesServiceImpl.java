@@ -31,8 +31,6 @@ public class TreeSpeciesServiceImpl implements TreeSpeciesService {
         Page<TreeSpecies> species = speciesRepository.findByConditions(
                 queryRequest.getSpeciesName(),
                 queryRequest.getSpeciesCode(),
-                queryRequest.getFamilyName(),
-                queryRequest.getGenusName(),
                 pageable
         );
         

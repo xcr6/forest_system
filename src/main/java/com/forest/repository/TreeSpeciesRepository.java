@@ -12,14 +12,10 @@ public interface TreeSpeciesRepository extends JpaRepository<TreeSpecies, Intege
 
     @Query("SELECT s FROM TreeSpecies s WHERE " +
            "(:speciesName IS NULL OR s.speciesName LIKE %:speciesName%) AND " +
-           "(:speciesCode IS NULL OR s.speciesCode LIKE %:speciesCode%) AND " +
-           "(:familyName IS NULL OR s.familyName LIKE %:familyName%) AND " +
-           "(:genusName IS NULL OR s.genusName LIKE %:genusName%)")
+           "(:speciesCode IS NULL OR s.speciesCode LIKE %:speciesCode%)")
     Page<TreeSpecies> findByConditions(
             @Param("speciesName") String speciesName,
             @Param("speciesCode") String speciesCode,
-            @Param("familyName") String familyName,
-            @Param("genusName") String genusName,
             Pageable pageable
     );
 } 

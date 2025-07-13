@@ -15,5 +15,5 @@ public interface SysPermissionRepository extends JpaRepository<SysPermission, In
     @Query("SELECT p FROM SysPermission p WHERE p.parent IS NULL")
     List<SysPermission> findAllRootPermissions();
 
-    List<SysPermission> findByParentId(Integer parentId);
+    List<SysPermission> findByParentPermissionId(Integer parentId);
 } 

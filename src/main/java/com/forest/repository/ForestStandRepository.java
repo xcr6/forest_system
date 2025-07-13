@@ -13,13 +13,11 @@ public interface ForestStandRepository extends JpaRepository<ForestStand, Intege
     @Query("SELECT s FROM ForestStand s WHERE " +
            "(:standName IS NULL OR s.standName LIKE %:standName%) AND " +
            "(:parcelId IS NULL OR s.parcel.parcelId = :parcelId) AND " +
-           "(:aspect IS NULL OR s.aspect = :aspect) AND " +
-           "(:slope IS NULL OR s.slope = :slope)")
+           "(:aspect IS NULL OR s.parcel.aspect = :aspect)")
     Page<ForestStand> findByConditions(
             @Param("standName") String standName,
             @Param("parcelId") Integer parcelId,
             @Param("aspect") String aspect,
-            @Param("slope") String slope,
             Pageable pageable
     );
 } 

@@ -46,7 +46,6 @@ public class ForestStandServiceImpl implements ForestStandService {
                 queryRequest.getStandName(),
                 queryRequest.getParcelId(),
                 queryRequest.getAspect(),
-                queryRequest.getSlope(),
                 pageable
         );
         

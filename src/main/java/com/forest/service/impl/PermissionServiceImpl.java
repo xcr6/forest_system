@@ -94,6 +94,6 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public List<SysPermission> getChildrenPermissions(Integer parentId) {
-        return permissionRepository.findByParentId(parentId);
+        return permissionRepository.findByParentPermissionId(parentId);
     }
 } 

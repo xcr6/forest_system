@@ -20,8 +20,9 @@ public class ResourceOverviewServiceImpl implements ResourceOverviewService {
 
     @Override
     public Map<String, Object> getOverview(Integer landUseType, BigDecimal areaMin, BigDecimal areaMax, String aspect) {
-        List<ForestParcel> parcels = parcelRepository.findAll();
+        List<ForestParcel> allParcels = parcelRepository.findAll();
         // 过滤条件
+        List<ForestParcel> parcels = allParcels;
         if (landUseType != null) {
             parcels = parcels.stream().filter(p -> p.getLandUseType() != null && Objects.equals(p.getLandUseType().getUseTypeId(), landUseType)).collect(Collectors.toList());
         }
@@ -34,19 +35,22 @@ public class ResourceOverviewServiceImpl implements ResourceOverviewService {
         if (aspect != null && !aspect.isEmpty()) {
             parcels = parcels.stream().filter(p -> aspect.equals(p.getAspect())).collect(Collectors.toList());
         }
-        int totalCount = parcels.size();
-        BigDecimal totalArea = parcels.stream().map(ForestParcel::getArea).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+        
+        final List<ForestParcel> finalParcels = parcels;
+        
+        int totalCount = finalParcels.size();
+        BigDecimal totalArea = finalParcels.stream().map(ForestParcel::getArea).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
         // 按土地类型统计
         List<Map<String, Object>> statisticsByLandUse = landUseTypeRepository.findAll().stream().map(type -> {
             Map<String, Object> map = new HashMap<>();
             map.put("name", type.getUseTypeName());
-            BigDecimal area = parcels.stream().filter(p -> p.getLandUseType() != null && Objects.equals(p.getLandUseType().getUseTypeId(), type.getUseTypeId())).map(ForestParcel::getArea).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal area = finalParcels.stream().filter(p -> p.getLandUseType() != null && Objects.equals(p.getLandUseType().getUseTypeId(), type.getUseTypeId())).map(ForestParcel::getArea).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
             map.put("value", area);
             return map;
         }).collect(Collectors.toList());
         // 按坡向统计
         Map<String, BigDecimal> aspectMap = new HashMap<>();
-        for (ForestParcel p : parcels) {
+        for (ForestParcel p : finalParcels) {
             if (p.getAspect() != null && p.getArea() != null) {
                 aspectMap.put(p.getAspect(), aspectMap.getOrDefault(p.getAspect(), BigDecimal.ZERO).add(p.getArea()));
             }
